@@ -6,13 +6,13 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
-    # Show the input form
+    # show input form
     return render_template("index.html")
 
 @app.route("/compute", methods=["POST"])
 def compute():
     error = None
-    # 1. Parse k
+    # parse k
     try:
         k = int(request.form["k"])
         if k < 1:
@@ -21,7 +21,7 @@ def compute():
         error = "Invalid k. Please enter an integer ≥ 1."
         return render_template("index.html", error=error)
 
-    # 2. Parse quotas as k comma-separated ints
+    # parse quotas
     quotas_raw = request.form.get("quotas", "").strip()
     quotas_split = [s.strip() for s in quotas_raw.split(",") if s.strip() != ""]
     if len(quotas_split) != k:
@@ -35,7 +35,7 @@ def compute():
         error = "Quotas must be nonnegative integers."
         return render_template("index.html", error=error)
 
-    # 3. Parse weight vectors: expects k lines of comma-separated ints
+    # parse weights
     weights_lines = request.form.get("weights", "").strip().splitlines()
     if len(weights_lines) != k:
         error = f"Weight vectors: expected {k} lines (one per dimension)."
@@ -61,19 +61,19 @@ def compute():
             error = "Weights must be nonnegative integers."
             return render_template("index.html", error=error)
 
-    # 4. Index type
+    # index type
     index_type = request.form.get("index_type", "shapley").lower()
     if index_type not in ("shapley", "banzhaf"):
         error = "Please select either Shapley or Banzhaf."
         return render_template("index.html", error=error)
 
-    # 5. Compute
+    # compute value
     if index_type == "shapley":
         power = compute_shapley(k, quotas, weight_matrix)
     else:
         power = compute_banzhaf(k, quotas, weight_matrix)
 
-    # 6. Render results
+    # render results
     return render_template(
         "results.html",
         n_players=n,
