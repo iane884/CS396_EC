@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ index_type }} Results</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 2em auto; }
+    h2 { margin-bottom: 0.2em; }
+    p, ul, ol { margin-top: 0.5em; }
+    a { display: inline-block; margin-top: 1.5em; }
+  </style>
+</head>
+<body>
+  <h2>{{ index_type }} for a {{ k_dims }}-dimensional game (n = {{ n_players }})</h2>
+
+  <p><strong>Quotas:</strong> {{ quotas }}</p>
+  <p><strong>Weight matrix:</strong></p>
+  <ul>
+    {% for row in weights %}
+      <li>{{ row }}</li>
+    {% endfor %}
+  </ul>
+
+  <h3>Power Indices:</h3>
+  <ol>
+    {% for val in power %}
+      <li>Player {{ loop.index }}: {{ "%.6f"|format(val) }}</li>
+    {% endfor %}
+  </ol>
+
+  <a href="/">← Compute another game</a>
+</body>
+</html>
